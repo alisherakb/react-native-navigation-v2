@@ -1,24 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, AsyncStorage } from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 
-import { goToAuth, goHome } from './navigation';
+import {goHome} from './navigation';
 
-import { USER_KEY } from './config';
-
-export default class Initialising extends React.Component {
-  async componentDidMount() {
-    try {
-      const user = await AsyncStorage.getItem(USER_KEY);
-      console.log('user: ', user);
-      if (user) {
-        goHome();
-      } else {
-        goToAuth();
-      }
-    } catch (err) {
-      console.log('error: ', err);
-      goToAuth();
-    }
+export default class Initializing extends React.Component {
+  componentDidMount() {
+    goHome();
   }
 
   render() {
@@ -32,11 +19,11 @@ export default class Initialising extends React.Component {
 
 const styles = StyleSheet.create({
   welcome: {
-    fontSize: 28
+    fontSize: 28,
   },
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 });

@@ -1,6 +1,6 @@
 import { Navigation } from 'react-native-navigation';
 
-export const goToAuth = () =>
+export const goHome = () =>
   Navigation.setRoot({
     root: {
       bottomTabs: {
@@ -8,28 +8,17 @@ export const goToAuth = () =>
         children: [
           {
             component: {
-              name: 'SignIn'
+              name: 'Map'
             }
           },
           {
             component: {
-              name: 'SignUp'
+              name: 'CameraView'
             }
-          }
-        ]
-      }
-    }
-  });
-
-export const goHome = () =>
-  Navigation.startTabBasedApp({
-    root: {
-      stack: {
-        id: 'App',
-        children: [
+          },
           {
             component: {
-              name: 'Home'
+              name: 'FriendList'
             }
           }
         ]

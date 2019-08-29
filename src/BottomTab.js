@@ -1,20 +1,23 @@
 import * as React from 'react';
 import {
   Text,
-  View,
   StyleSheet,
   Platform,
   Dimensions,
-  Animated,
   TouchableOpacity,
-  Image
+  Image,
+  Animated,
+  View,
+  Easing
 } from 'react-native';
 import { Navigation } from 'react-native-navigation';
+import AR from './icons/AR';
+import Karta from './icons/Karta';
+import Portals from './icons/Portals';
 
 export default class BottomBar extends React.Component {
   state = {
-    index: 0,
-    animation: new Animated.Value(0)
+    anim: new Animated.Value(0)
   };
   changeToTab = newIndex => {
     Navigation.mergeOptions('HomeTabs', {
@@ -22,62 +25,73 @@ export default class BottomBar extends React.Component {
         currentTabIndex: newIndex
       }
     });
-
-    Animated.timing(this.state.animation, {
-      toValue: newIndex,
-      duration: 300
-      // useNativeDriver: true
+    Animated.timing(this.state.anim, {
+      toValue: newIndex
     }).start();
   };
 
   render() {
+    const firstTabOpacity = {
+      opacity: this.state.anim.interpolate({
+        inputRange: [0, 1, 2],
+        outputRange: [1, 0.2, 0.5]
+      }),
+      transform: [
+        {
+          scale: this.state.anim.interpolate({
+            inputRange: [0, 1, 2],
+            outputRange: [1.2, 1, 1]
+          })
+        }
+      ]
+    };
+    const secondTabOpacity = {
+      opacity: this.state.anim.interpolate({
+        inputRange: [0, 1, 2],
+        outputRange: [0.5, 1, 0.5]
+      }),
+      transform: [
+        {
+          scale: this.state.anim.interpolate({
+            inputRange: [0, 1, 2],
+            outputRange: [1, 1.2, 1]
+          })
+        }
+      ]
+    };
+    const thirdTabOpacity = {
+      opacity: this.state.anim.interpolate({
+        inputRange: [0, 1, 2],
+        outputRange: [0.5, 0.5, 1]
+      }),
+      transform: [
+        {
+          scale: this.state.anim.interpolate({
+            inputRange: [0, 1, 2],
+            outputRange: [1, 1, 1.2]
+          })
+        }
+      ]
+    };
     return (
       <View style={styles.tabBar}>
-        <TouchableOpacity activeOpacity={1} onPress={() => this.changeToTab(0)}>
+        <TouchableOpacity onPress={() => this.changeToTab(0)}>
           <Animated.View
-            style={[
-              styles.iconView,
-              {
-                transform: [
-                  {
-                    translateX: this.state.animation.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [0, -20]
-                    })
-                  }
-                ],
-                opacity: this.state.animation.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [1, 0.8]
-                })
-              }
-            ]}
+            useNativeDriver={true}
+            style={[styles.iconView, firstTabOpacity]}
           >
-            <Image source={require('./signin.png')} style={[styles.image]} />
+            <Karta />
           </Animated.View>
         </TouchableOpacity>
 
-        <TouchableOpacity activeOpacity={1} onPress={() => this.changeToTab(1)}>
-          <Animated.View
-            style={[
-              styles.iconView,
-              {
-                transform: [
-                  {
-                    scale: this.state.animation.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [1, 1.2]
-                    })
-                  }
-                ],
-                opacity: this.state.animation.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [0.8, 1]
-                })
-              }
-            ]}
-          >
-            <Image source={require('./signin.png')} style={[styles.image]} />
+        <TouchableOpacity onPress={() => this.changeToTab(1)}>
+          <Animated.View style={[styles.iconView, secondTabOpacity]}>
+            <AR />
+          </Animated.View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => this.changeToTab(2)}>
+          <Animated.View style={[styles.iconView, thirdTabOpacity]}>
+            <Portals />
           </Animated.View>
         </TouchableOpacity>
       </View>
@@ -91,7 +105,7 @@ const isTallIPhone =
 const styles = StyleSheet.create({
   tabBar: {
     position: 'absolute',
-    bottom: 0,
+    bottom: 40,
     width: '100%',
     height: isTallIPhone ? 83 : 49, // The Height of the iOS tab
     backgroundColor: 'transparent',
@@ -99,7 +113,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around'
   },
   iconView: {
-    width: '25%',
     height: '100%',
     alignItems: 'center'
   },
@@ -111,7 +124,7 @@ const styles = StyleSheet.create({
   image: {
     position: 'absolute',
     bottom: isTallIPhone ? 50 : 21,
-    width: 40,
-    height: 40
+    width: 54,
+    height: 54
   }
 });
